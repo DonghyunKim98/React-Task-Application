@@ -6,6 +6,7 @@ export interface gameDataInterface {
     blankCnt: number,
     row: number,
     col: number,
+    isGameStart: boolean,
 }
 export const levels : Object = {
     "초급": [10, 10, 10],
@@ -22,4 +23,5 @@ export const initGameData : gameDataInterface = {
     blankCnt: 0,
     row: 0,
     col: 0,
+    isGameStart: false,
 }

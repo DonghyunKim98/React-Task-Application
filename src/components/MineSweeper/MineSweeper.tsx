@@ -4,6 +4,7 @@ import "./MineSweeper.css";
 import {initGameData, gameDataInterface} from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
+import GameInfo from './Screen/GameInfo';
 
 function MineSweeper() {
     const [gameData,setGameData] : [gameDataInterface,Function] = useState(initGameData);
@@ -15,6 +16,10 @@ function MineSweeper() {
         });
     };
     const onStartBtnClickListener=()=>{
+        setGameData({
+            ...gameData,
+            isGameStart: true,
+        })
         console.log("시작!");
     }
 
@@ -29,8 +34,14 @@ function MineSweeper() {
                     onLevelChangeListener={onLevelChangeListener}
                 />
                 {
-                    gameData.selectLevel === "사용자 설정" &&
+                    (gameData.selectLevel === "사용자 설정"&& gameData.isGameStart === false) &&
                     <CustomGameDataField/>
+                }
+                {
+                    gameData.isGameStart === true && 
+                    <GameInfo
+                        gameData={gameData}
+                    /> 
                 }
                 <StartBtn
                     onStartBtnClickListener={onStartBtnClickListener}
