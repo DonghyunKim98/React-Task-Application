@@ -1,5 +1,5 @@
 import React from 'react';
-import {levels} from './MineSweeperData';
+import {levels} from '../MineSweeperData';
 interface SelectionProp {
     currentLevel : string,
     onLevelChangeListener: Function,

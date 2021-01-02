@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import CustomGameDataField from './CustomGameDataField';
+import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
 import {initGameData, gameDataInterface} from './MineSweeperData';
-import Selection from './Selection';
-import StartBtn from './StartBtn';
+import Selection from './Screen/Selection';
+import StartBtn from './Screen/StartBtn';
 
 function MineSweeper() {
     const [gameData,setGameData] : [gameDataInterface,Function] = useState(initGameData);
