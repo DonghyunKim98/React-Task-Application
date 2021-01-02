@@ -2,9 +2,9 @@ import React from 'react';
 
 function MineSweeper(){
     return (
-        <h1>
+        <div>
             MineSweeper Application
-        </h1>
+        </div>
     )
 }
 

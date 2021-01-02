@@ -2,9 +2,9 @@ import React from 'react';
 
 function Todo (){
     return (
-        <h1>
+        <div>
             Todo Application
-        </h1>
+        </div>
     )
 }
 
