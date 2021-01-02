@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./MineSweeper.css";
 import {initGameData, gameDataInterface} from './MineSweeperData';
 import Selection from './Selection';
+import StartBtn from './StartBtn';
 function MineSweeper() {
     const [gameData,setGameData] : [gameDataInterface,Function] = useState(initGameData);
     
@@ -11,6 +12,9 @@ function MineSweeper() {
             selectLevel: `${newLevel}`
         });
     };
+    const onStartBtnClickListener=()=>{
+        console.log("시작!");
+    }
 
     return (
         <div>
@@ -22,7 +26,9 @@ function MineSweeper() {
                     currentLevel={gameData.selectLevel}
                     onLevelChangeListener={onLevelChangeListener}
                 />
-                <button id="startBtn">시작</button>
+                <StartBtn
+                    onStartBtnClickListener={onStartBtnClickListener}
+                />
             </nav>
         </div>
     )
