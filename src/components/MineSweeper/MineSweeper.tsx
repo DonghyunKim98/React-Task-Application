@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import CustomGameDataField from './CustomGameDataField';
 import "./MineSweeper.css";
 import {initGameData, gameDataInterface} from './MineSweeperData';
 import Selection from './Selection';
 import StartBtn from './StartBtn';
+
 function MineSweeper() {
     const [gameData,setGameData] : [gameDataInterface,Function] = useState(initGameData);
     
@@ -26,6 +28,10 @@ function MineSweeper() {
                     currentLevel={gameData.selectLevel}
                     onLevelChangeListener={onLevelChangeListener}
                 />
+                {
+                    gameData.selectLevel === "사용자 설정" &&
+                    <CustomGameDataField/>
+                }
                 <StartBtn
                     onStartBtnClickListener={onStartBtnClickListener}
                 />

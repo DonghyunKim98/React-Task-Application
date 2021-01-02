@@ -22,7 +22,7 @@ nav select{
     bottom: 20%;
 }
 
-#custom_Field{
+#custom_Game_Field{
     position: absolute;
     left : 30%;
     bottom: 20%;
@@ -67,6 +67,10 @@ nav select{
     text-align: center;
     text-decoration: none;
     display: inline-block;
+}
+
+.custom_Game_Field_Title{
+    padding-right: 1rem;
 }
 section{
     position : relative;
