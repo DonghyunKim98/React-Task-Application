@@ -7,7 +7,7 @@ export interface gameDataInterface {
     row: number,
     col: number,
 }
-export const level : Object = {
+export const levels : Object = {
     "초급": [10, 10, 10],
     "중급": [15, 15, 20],
     "고급": [20, 20, 40],
