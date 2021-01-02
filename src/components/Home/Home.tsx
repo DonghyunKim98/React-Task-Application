@@ -1,10 +1,21 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 function Home() {
     return (
-        <div>
-            Home Application
-        </div>
+        <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/todo">Todo</Link>
+          </li>
+          <li>
+            <Link to="/MineSweeper">MineSweeper</Link>
+          </li>
+        </ul>
+      </nav>
     );
 }
 
