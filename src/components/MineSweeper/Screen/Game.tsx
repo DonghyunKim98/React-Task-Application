@@ -4,9 +4,11 @@ interface GameProp {
   row: number,
   col: number,
   bombCnt: number,
+  gridRightClickListener : Function,
+  gridClickListener: Function,
 }
 
-function Game({ row, col, bombCnt }: GameProp) {
+function Game({ row, col, bombCnt, gridClickListener, gridRightClickListener }: GameProp) {
   const createBomb = () => {
     let temp = new Array<string>();
     for (let i = 0; i < bombCnt; i++) temp.push("💣");
@@ -48,10 +50,11 @@ function Game({ row, col, bombCnt }: GameProp) {
         width={`${tdWidth}`}
         id={`${ypos}_${xpos}`}
         key={`${ypos}_${xpos}`}
+        onContextMenu={(e)=>gridRightClickListener(e)}
+        onClick={(e)=>gridClickListener(e.currentTarget)}
       >
-        <span className={`Bomb:${bombArr[ypos][xpos]}`} />
+        <span custom-value={`${bombArr[ypos][xpos]}`} />
       </td>;
-      console.log(tdElement);
       trItems.push(tdElement);
     }
     TableItems.push(

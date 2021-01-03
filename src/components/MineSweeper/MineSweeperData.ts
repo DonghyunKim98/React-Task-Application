@@ -7,6 +7,7 @@ export interface gameDataInterface {
   row: number;
   col: number;
   isGameStart: boolean;
+  isGameOver: boolean;
 }
 export const levels: { [index: string]: Array<number> } = {
   초급: [10, 10, 10],
@@ -18,13 +19,14 @@ export const width: number = 300,
   height: number = 300;
 export const initGameData: gameDataInterface = {
   selectLevel: "초급",
-  flagCnt: 0,
-  bombCnt: 0,
+  flagCnt: 10,
+  bombCnt: 10,
   time: 0,
   blankCnt: 0,
   row: 10,
   col: 10,
   isGameStart: false,
+  isGameOver : false,
 };
 export const dir = [
   [0, 1],
