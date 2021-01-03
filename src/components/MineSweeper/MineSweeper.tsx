@@ -60,14 +60,16 @@ function MineSweeper() {
                     onStartBtnClickListener={onStartBtnClickListener}
                 />
             </nav>
-            {
-                gameData.isGameStart === true &&
-                <Game
-                    row={gameData.row}
-                    col={gameData.col}
-                    bombCnt={gameData.bombCnt}
-                />
-            }
+            <section>
+                {
+                    gameData.isGameStart === true &&
+                    <Game
+                        row={gameData.row}
+                        col={gameData.col}
+                        bombCnt={gameData.bombCnt}
+                    />
+                }
+            </section>
         </div>
     )
 }

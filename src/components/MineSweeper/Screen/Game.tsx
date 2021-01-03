@@ -49,8 +49,9 @@ function Game({ row, col, bombCnt }: GameProp) {
         id={`${ypos}_${xpos}`}
         key={`${ypos}_${xpos}`}
       >
-        <span id={`${bombArr[ypos][xpos]}`} />
+        <span className={`Bomb:${bombArr[ypos][xpos]}`} />
       </td>;
+      console.log(tdElement);
       trItems.push(tdElement);
     }
     TableItems.push(
@@ -60,11 +61,11 @@ function Game({ row, col, bombCnt }: GameProp) {
     )
   };
   return (
-    <table>
-      <tbody>
-        {TableItems}
-      </tbody>
-    </table>
+      <table>
+        <tbody>
+          {TableItems}
+        </tbody>
+      </table>
   );
 }
 
