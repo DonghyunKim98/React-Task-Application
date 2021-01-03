@@ -1,26 +1,39 @@
 import React, { useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
-import {initGameData, gameDataInterface} from './MineSweeperData';
+import { initGameData, gameDataInterface, levels } from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
 import GameInfo from './Screen/GameInfo';
+import Game from './Screen/Game';
 
 function MineSweeper() {
-    const [gameData,setGameData] : [gameDataInterface,Function] = useState(initGameData);
-    
-    const onLevelChangeListener=(newLevel : string)=>{
+    const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
+
+    const onLevelChangeListener = (newLevel: string) => {
+        const [newRow, newCol, newBombCnt]: Array<number> = levels[`${newLevel}`];
+
         setGameData({
             ...gameData,
+            row: newRow,
+            col: newCol,
+            bombCnt: newBombCnt,
             selectLevel: `${newLevel}`
         });
     };
-    const onStartBtnClickListener=()=>{
+
+    const checkValidGame: () => boolean = () => {
+        if (gameData.selectLevel !== "사용자 설정") return true;
+        const isBombCntOver: number = gameData.row * gameData.col - gameData.bombCnt;
+        return isBombCntOver ? true : false;
+    };
+
+    const onStartBtnClickListener = () => {
+        if (!checkValidGame()) return;
         setGameData({
             ...gameData,
             isGameStart: true,
         })
-        console.log("시작!");
     }
 
     return (
@@ -34,19 +47,27 @@ function MineSweeper() {
                     onLevelChangeListener={onLevelChangeListener}
                 />
                 {
-                    (gameData.selectLevel === "사용자 설정"&& gameData.isGameStart === false) &&
-                    <CustomGameDataField/>
+                    (gameData.selectLevel === "사용자 설정" && gameData.isGameStart === false) &&
+                    <CustomGameDataField />
                 }
                 {
-                    gameData.isGameStart === true && 
+                    gameData.isGameStart === true &&
                     <GameInfo
                         gameData={gameData}
-                    /> 
+                    />
                 }
                 <StartBtn
                     onStartBtnClickListener={onStartBtnClickListener}
                 />
             </nav>
+            {
+                gameData.isGameStart === true &&
+                <Game
+                    row={gameData.row}
+                    col={gameData.col}
+                    bombCnt={gameData.bombCnt}
+                />
+            }
         </div>
     )
 }
