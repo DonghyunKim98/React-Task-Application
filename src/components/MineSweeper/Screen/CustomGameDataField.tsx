@@ -1,6 +1,6 @@
 import React from 'react';
 
-function CustomGameDataField() {
+function CustomGameDataField({customData, onChangeListener}: {customData: any, onChangeListener: Function}) {
     return (
         <div id="custom_Game_Field">
             <div id="custom_Width">
@@ -9,6 +9,10 @@ function CustomGameDataField() {
                     type="number"
                     id="rowInput"
                     value={10}
+                    onChange={(e)=>onChangeListener({
+                        ...customData,
+                        row: e.currentTarget.value,
+                    })}
                 />
             </div>
             <div id="custom_Height">
@@ -17,6 +21,10 @@ function CustomGameDataField() {
                     type="number"
                     id="heightInput"
                     value={10}
+                    onChange={(e)=>onChangeListener({
+                        ...customData,
+                        height: e.currentTarget.value,
+                    })}
                 />
             </div>
             <div id="custom_Bomb">
@@ -24,7 +32,10 @@ function CustomGameDataField() {
                 <input
                     type="number"
                     id="bombInput"
-                    value={10}
+                    onChange={(e)=>onChangeListener({
+                        ...customData,
+                        bombCnt: e.currentTarget.value,
+                    })}
                 />
             </div>
         </div>

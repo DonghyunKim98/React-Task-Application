@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
-import { initGameData, gameDataInterface, levels, dir } from './MineSweeperData';
+import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData } from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
 import GameInfo from './Screen/GameInfo';
@@ -9,6 +9,7 @@ import Game from './Screen/Game';
 
 function MineSweeper() {
     const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
+    const [customData, setcustomData] : [customDataInterface, Function] = useState(initcustomData);
     useEffect(()=>{
         const timeSet = () => {
             return setInterval(()=>{
@@ -41,13 +42,14 @@ function MineSweeper() {
 
     },[gameData]);
     const onLevelChangeListener = (newLevel: string) => {
-        const [newRow, newCol, newBombCnt]: Array<number> = levels[`${newLevel}`];
+        const [newRow, newCol, newBombAndFlagCnt]: Array<number> = levels[`${newLevel}`];
 
         setGameData({
             ...gameData,
             row: newRow,
             col: newCol,
-            bombCnt: newBombCnt,
+            flagCnt: newBombAndFlagCnt,
+            bombCnt: newBombAndFlagCnt,
             selectLevel: `${newLevel}`
         });
     };
@@ -60,6 +62,16 @@ function MineSweeper() {
 
     const onStartBtnClickListener = () => {
         if (!checkValidGame()) return;
+        if(gameData.selectLevel==="사용자 설정"){
+            setGameData({
+                ...gameData,
+                row: customData.row,
+                col: customData.col,
+                bombCnt: customData.bombCnt,
+                flagCnt: customData.bombCnt,
+            });
+            return;
+        }
         setGameData({
             ...gameData,
             isGameStart: true,
@@ -125,8 +137,11 @@ function MineSweeper() {
                     onLevelChangeListener={onLevelChangeListener}
                 />
                 {
-                    (gameData.selectLevel === "사용자 설정" && gameData.isGameStart === false) &&
-                    <CustomGameDataField />
+                    (gameData.selectLevel === "사용자 설정") &&
+                    <CustomGameDataField
+                        customData={customData} 
+                        onChangeListener={setcustomData}
+                    />
                 }
                 {
                     gameData.isGameStart === true &&

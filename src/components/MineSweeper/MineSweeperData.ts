@@ -9,6 +9,11 @@ export interface gameDataInterface {
   isGameStart: boolean;
   isGameOver: boolean;
 }
+export interface customDataInterface {
+  row: number,
+  col: number,
+  bombCnt: number,
+}
 export const levels: { [index: string]: Array<number> } = {
   초급: [10, 10, 10],
   중급: [15, 15, 20],
@@ -28,6 +33,11 @@ export const initGameData: gameDataInterface = {
   isGameStart: false,
   isGameOver : false,
 };
+export const initcustomData : customDataInterface = {
+  row: 10,
+  col: 10,
+  bombCnt: 10,
+}
 export const dir = [
   [0, 1],
   [0, -1],
