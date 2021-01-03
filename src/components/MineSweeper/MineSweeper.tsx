@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
 import { initGameData, gameDataInterface, levels, dir } from './MineSweeperData';
@@ -9,7 +9,37 @@ import Game from './Screen/Game';
 
 function MineSweeper() {
     const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
+    useEffect(()=>{
+        const timeSet = () => {
+            return setInterval(()=>{
+                setGameData({
+                    ...gameData,
+                    time: gameData.time+1,
+                },1000)
+            });
+        };
+        const checkGameOver : () => boolean =()=>{
+            if(gameData.isGameOver) return true;
+            const unPressedGrid : number = gameData.row*gameData.col-gameData.blankCnt;
+            
+            if(gameData.bombCnt=== unPressedGrid) {
+                setGameData({
+                    ...gameData,
+                    isGameOver: true,
+                })
+                return true;
+            }
+            return false;
+        }
+        if(checkGameOver()) {
+            clearInterval(timeSet());
+        }
+        if(gameData.isGameStart) {
+            timeSet();
+            return;
+        }
 
+    },[gameData]);
     const onLevelChangeListener = (newLevel: string) => {
         const [newRow, newCol, newBombCnt]: Array<number> = levels[`${newLevel}`];
 
@@ -33,7 +63,7 @@ function MineSweeper() {
         setGameData({
             ...gameData,
             isGameStart: true,
-        })
+        });
     };
 
     const gridRightClickListener = (e: any) => {
@@ -83,7 +113,7 @@ function MineSweeper() {
         }
         return;
     };
-
+    
     return (
         <div>
             <header id="header">
