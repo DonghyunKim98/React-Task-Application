@@ -12,18 +12,31 @@ function MineSweeper() {
     const [customData, setCustomData]: [customDataInterface, Function] = useState(initcustomData);
     const [gameProcessData, setGameProcessData]: [gameProcessDataInterface, Function] = useState(initgameProcessData);
     // 시간 경과를 체크하기 위한 useEffect
-    useEffect(()=>{
-        if(gameProcessData.isGameStart){
-            const tick = setTimeout(()=>{
+    useEffect(() => {
+        if (gameProcessData.isGameOver){
+            if(gameProcessData.isPlayerWinGame){
+                alert("모든 폭탄을 찾아냈다! 최고야!");
+            } else {
+                alert("저런 폭탄을 밟아버렸네 ㅠㅠ");
+            } 
+            setGameProcessData({
+                ...gameProcessData,
+                isGameOver: false,
+                isGameStart: false,
+            });
+            return;
+        }
+        if (gameProcessData.isGameStart) {
+            const tick = setTimeout(() => {
                 setGameData({
                     ...gameData,
-                    time: gameData.time+1,
+                    time: gameData.time + 1,
                 })
-            },1000);
+            }, 1000);
             return () => clearInterval(tick);
         }
         return;
-    },[gameProcessData,gameData]);
+    }, [gameProcessData, gameData]);
     const onLevelChangeListener = (newLevel: string) => {
         const [newRow, newCol, newBombAndFlagCnt]: Array<number> = levels[`${newLevel}`];
 
@@ -72,17 +85,22 @@ function MineSweeper() {
     };
 
     const gridClickListener = (currentTarget: any) => {
-        if (currentTarget.style.backgroundColor === "white") return;
+        const isClicked: boolean = currentTarget.style.backgroundColor === "white";
+        const isRightClicked: boolean = currentTarget.innerText === '🚩';
+
+        if (isClicked || isRightClicked) return;
         currentTarget.style.backgroundColor = "white";
         const textNode = currentTarget.childNodes[0];
+
         setGameData({
             ...gameData,
             blankCnt: gameData.blankCnt + 1,
         });
         textNode.innerText = textNode.getAttribute('custom-value');
         if (textNode.innerText === "💣") {
-            setGameData({
-                ...gameData,
+            console.log("밟았다!");
+            setGameProcessData({
+                ...gameProcessData,
                 isGameOver: true,
             })
             return;
@@ -92,13 +110,17 @@ function MineSweeper() {
             const idName = currentTarget.id.split("_");
             const ypos = parseInt(idName[0]);
             const xpos = parseInt(idName[1]);
+
             dir.forEach((value) => {
                 const ny = value[0] + ypos,
                     nx = value[1] + xpos;
+
                 if (0 <= ny && ny < gameData.row && 0 <= nx && nx < gameData.col) {
                     const nextNode = document.getElementById(`${ny}_${nx}`);
-                    if (nextNode != null) {
+
+                    if (nextNode != null && nextNode.innerText !== '🚩') {
                         const nextTextNode = nextNode.childNodes[0] as Element;
+
                         if (nextTextNode.getAttribute('custom-value') !== "💣") {
                             gridClickListener(nextNode);
                         }
