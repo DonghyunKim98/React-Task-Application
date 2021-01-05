@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
-import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData } from './MineSweeperData';
+import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData, gameProcessDataInterface, initgameProcessData } from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
 import GameInfo from './Screen/GameInfo';
@@ -9,38 +9,21 @@ import Game from './Screen/Game';
 
 function MineSweeper() {
     const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
-    const [customData, setcustomData] : [customDataInterface, Function] = useState(initcustomData);
+    const [customData, setCustomData]: [customDataInterface, Function] = useState(initcustomData);
+    const [gameProcessData, setGameProcessData]: [gameProcessDataInterface, Function] = useState(initgameProcessData);
+    // 시간 경과를 체크하기 위한 useEffect
     useEffect(()=>{
-        const timeSet = () => {
-            return setInterval(()=>{
+        if(gameProcessData.isGameStart){
+            const tick = setTimeout(()=>{
                 setGameData({
                     ...gameData,
                     time: gameData.time+1,
-                },1000)
-            });
-        };
-        const checkGameOver : () => boolean =()=>{
-            if(gameData.isGameOver) return true;
-            const unPressedGrid : number = gameData.row*gameData.col-gameData.blankCnt;
-            
-            if(gameData.bombCnt=== unPressedGrid) {
-                setGameData({
-                    ...gameData,
-                    isGameOver: true,
                 })
-                return true;
-            }
-            return false;
+            },1000);
+            return () => clearInterval(tick);
         }
-        if(checkGameOver()) {
-            clearInterval(timeSet());
-        }
-        if(gameData.isGameStart) {
-            timeSet();
-            return;
-        }
-
-    },[gameData]);
+        return;
+    },[gameProcessData,gameData]);
     const onLevelChangeListener = (newLevel: string) => {
         const [newRow, newCol, newBombAndFlagCnt]: Array<number> = levels[`${newLevel}`];
 
@@ -62,7 +45,7 @@ function MineSweeper() {
 
     const onStartBtnClickListener = () => {
         if (!checkValidGame()) return;
-        if(gameData.selectLevel==="사용자 설정"){
+        if (gameData.selectLevel === "사용자 설정") {
             setGameData({
                 ...gameData,
                 row: customData.row,
@@ -72,8 +55,8 @@ function MineSweeper() {
             });
             return;
         }
-        setGameData({
-            ...gameData,
+        setGameProcessData({
+            ...gameProcessData,
             isGameStart: true,
         });
     };
@@ -91,7 +74,7 @@ function MineSweeper() {
     const gridClickListener = (currentTarget: any) => {
         if (currentTarget.style.backgroundColor === "white") return;
         currentTarget.style.backgroundColor = "white";
-        const textNode =currentTarget.childNodes[0];
+        const textNode = currentTarget.childNodes[0];
         setGameData({
             ...gameData,
             blankCnt: gameData.blankCnt + 1,
@@ -125,7 +108,7 @@ function MineSweeper() {
         }
         return;
     };
-    
+
     return (
         <div>
             <header id="header">
@@ -139,12 +122,12 @@ function MineSweeper() {
                 {
                     (gameData.selectLevel === "사용자 설정") &&
                     <CustomGameDataField
-                        customData={customData} 
-                        onChangeListener={setcustomData}
+                        customData={customData}
+                        onChangeListener={setCustomData}
                     />
                 }
                 {
-                    gameData.isGameStart === true &&
+                    gameProcessData.isGameStart === true &&
                     <GameInfo
                         gameData={gameData}
                     />
@@ -155,7 +138,7 @@ function MineSweeper() {
             </nav>
             <section>
                 {
-                    gameData.isGameStart === true &&
+                    gameProcessData.isGameStart === true &&
                     <Game
                         row={gameData.row}
                         col={gameData.col}

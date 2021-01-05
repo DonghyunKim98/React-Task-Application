@@ -6,13 +6,16 @@ export interface gameDataInterface {
   blankCnt: number;
   row: number;
   col: number;
-  isGameStart: boolean;
-  isGameOver: boolean;
 }
 export interface customDataInterface {
-  row: number,
-  col: number,
-  bombCnt: number,
+  row: number;
+  col: number;
+  bombCnt: number;
+}
+export interface gameProcessDataInterface {
+  isGameStart: boolean;
+  isGameOver: boolean;
+  isPlayerWinGame: boolean;
 }
 export const levels: { [index: string]: Array<number> } = {
   초급: [10, 10, 10],
@@ -30,14 +33,17 @@ export const initGameData: gameDataInterface = {
   blankCnt: 0,
   row: 10,
   col: 10,
-  isGameStart: false,
-  isGameOver : false,
 };
-export const initcustomData : customDataInterface = {
+export const initcustomData: customDataInterface = {
   row: 10,
   col: 10,
   bombCnt: 10,
-}
+};
+export const initgameProcessData: gameProcessDataInterface = {
+  isGameStart: false,
+  isGameOver: false,
+  isPlayerWinGame: false,
+};
 export const dir = [
   [0, 1],
   [0, -1],
