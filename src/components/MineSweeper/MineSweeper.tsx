@@ -98,7 +98,6 @@ function MineSweeper() {
         });
         textNode.innerText = textNode.getAttribute('custom-value');
         if (textNode.innerText === "💣") {
-            console.log("밟았다!");
             setGameProcessData({
                 ...gameProcessData,
                 isGameOver: true,
