@@ -8,7 +8,6 @@ function CustomGameDataField({customData, onChangeListener}: {customData: any, o
                 <input
                     type="number"
                     id="rowInput"
-                    value={10}
                     onChange={(e)=>onChangeListener({
                         ...customData,
                         row: e.currentTarget.value,
@@ -20,10 +19,9 @@ function CustomGameDataField({customData, onChangeListener}: {customData: any, o
                 <input
                     type="number"
                     id="heightInput"
-                    value={10}
                     onChange={(e)=>onChangeListener({
                         ...customData,
-                        height: e.currentTarget.value,
+                        col: e.currentTarget.value,
                     })}
                 />
             </div>

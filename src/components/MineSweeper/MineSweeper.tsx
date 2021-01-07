@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
-import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData, gameProcessDataInterface, initgameProcessData } from './MineSweeperData';
+import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData, gameProcessDataInterface, gameDefaultDataInterface, initgameProcessData, initGameDefaultData, createMineSweeperData} from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
 import GameInfo from './Screen/GameInfo';
@@ -9,16 +9,17 @@ import Game from './Screen/Game';
 
 function MineSweeper() {
     const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
+    const [gameDefaultData, setGameDefaultData]: [gameDefaultDataInterface, Function] = useState(initGameDefaultData)
     const [customData, setCustomData]: [customDataInterface, Function] = useState(initcustomData);
     const [gameProcessData, setGameProcessData]: [gameProcessDataInterface, Function] = useState(initgameProcessData);
     // 시간 경과를 체크하기 위한 useEffect
     useEffect(() => {
-        if (gameProcessData.isGameOver){
-            if(gameProcessData.isPlayerWinGame){
+        if (gameProcessData.isGameOver) {
+            if (gameProcessData.isPlayerWinGame) {
                 alert("모든 폭탄을 찾아냈다! 최고야!");
             } else {
                 alert("저런 폭탄을 밟아버렸네 ㅠㅠ");
-            } 
+            }
             setGameProcessData({
                 ...gameProcessData,
                 isGameOver: false,
@@ -27,7 +28,7 @@ function MineSweeper() {
             return;
         }
         if (gameProcessData.isGameStart) {
-            const tick = setTimeout(() => {
+            const tick = setInterval(() => {
                 setGameData({
                     ...gameData,
                     time: gameData.time + 1,
@@ -40,43 +41,52 @@ function MineSweeper() {
     const onLevelChangeListener = (newLevel: string) => {
         const [newRow, newCol, newBombAndFlagCnt]: Array<number> = levels[`${newLevel}`];
 
-        setGameData({
-            ...gameData,
+        setGameDefaultData({
+            selectLevel: `${newLevel}`,
             row: newRow,
             col: newCol,
-            flagCnt: newBombAndFlagCnt,
             bombCnt: newBombAndFlagCnt,
-            selectLevel: `${newLevel}`
         });
+        setGameData({
+            ...gameData,
+            flagCnt: newBombAndFlagCnt,
+        })
     };
 
     const checkValidGame: () => boolean = () => {
-        if (gameData.selectLevel !== "사용자 설정") return true;
-        const isBombCntOver: number = gameData.row * gameData.col - gameData.bombCnt;
+        if (gameDefaultData.selectLevel !== "사용자 설정") return true;
+        const isBombCntOver: number = gameDefaultData.row * gameDefaultData.col - gameDefaultData.bombCnt;
         return isBombCntOver ? true : false;
     };
 
     const onStartBtnClickListener = () => {
-        if (!checkValidGame()) return;
-        if (gameData.selectLevel === "사용자 설정") {
-            setGameData({
-                ...gameData,
+        if (!checkValidGame()) {
+            alert("너무 폭탄이 많아요!!");
+            return;
+        }
+        if (gameDefaultData.selectLevel === "사용자 설정") {
+            setGameDefaultData({
+                ...gameDefaultData,
                 row: customData.row,
                 col: customData.col,
                 bombCnt: customData.bombCnt,
+            });
+            setGameData({
+                ...gameData,
                 flagCnt: customData.bombCnt,
             });
             return;
         }
+        createMineSweeperData(gameDefaultData.row,gameDefaultData.col,gameDefaultData.bombCnt);
         setGameProcessData({
             ...gameProcessData,
             isGameStart: true,
         });
     };
 
-    const gridRightClickListener = (e: any) => {
+    const gridRightClickListener = (e : any) => {
         e.preventDefault();
-        if (gameData.flagCnt <= 0) return;
+        if (gameData.flagCnt <= 0 || e.currentTarget.innerText === '🚩') return;
         e.currentTarget.innerText = `🚩`;
         setGameData({
             ...gameData,
@@ -114,7 +124,7 @@ function MineSweeper() {
                 const ny = value[0] + ypos,
                     nx = value[1] + xpos;
 
-                if (0 <= ny && ny < gameData.row && 0 <= nx && nx < gameData.col) {
+                if (0 <= ny && ny < gameDefaultData.row && 0 <= nx && nx < gameDefaultData.col) {
                     const nextNode = document.getElementById(`${ny}_${nx}`);
 
                     if (nextNode != null && nextNode.innerText !== '🚩') {
@@ -137,11 +147,11 @@ function MineSweeper() {
             </header>
             <nav id="nav">
                 <Selection
-                    currentLevel={gameData.selectLevel}
+                    currentLevel={gameDefaultData.selectLevel}
                     onLevelChangeListener={onLevelChangeListener}
                 />
                 {
-                    (gameData.selectLevel === "사용자 설정") &&
+                    (gameDefaultData.selectLevel === "사용자 설정") &&
                     <CustomGameDataField
                         customData={customData}
                         onChangeListener={setCustomData}
@@ -151,6 +161,7 @@ function MineSweeper() {
                     gameProcessData.isGameStart === true &&
                     <GameInfo
                         gameData={gameData}
+                        gameDefaultData={gameDefaultData}
                     />
                 }
                 <StartBtn
@@ -161,9 +172,8 @@ function MineSweeper() {
                 {
                     gameProcessData.isGameStart === true &&
                     <Game
-                        row={gameData.row}
-                        col={gameData.col}
-                        bombCnt={gameData.bombCnt}
+                        row={gameDefaultData.row}
+                        col={gameDefaultData.col}
                         gridRightClickListener={gridRightClickListener}
                         gridClickListener={gridClickListener}
                     />

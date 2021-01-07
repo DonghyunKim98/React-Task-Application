@@ -1,11 +1,13 @@
-export interface gameDataInterface {
+export interface gameDefaultDataInterface {
   selectLevel: string;
-  flagCnt: number;
-  bombCnt: number;
-  time: number;
-  blankCnt: number;
   row: number;
   col: number;
+  bombCnt: number;
+}
+export interface gameDataInterface {
+  flagCnt: number;
+  time: number;
+  blankCnt: number;
 }
 export interface customDataInterface {
   row: number;
@@ -25,14 +27,16 @@ export const levels: { [index: string]: Array<number> } = {
 };
 export const width: number = 300,
   height: number = 300;
-export const initGameData: gameDataInterface = {
+export const initGameDefaultData: gameDefaultDataInterface = {
   selectLevel: "초급",
-  flagCnt: 10,
-  bombCnt: 10,
-  time: 0,
-  blankCnt: 0,
   row: 10,
   col: 10,
+  bombCnt: 10,
+};
+export const initGameData: gameDataInterface = {
+  flagCnt: 10,
+  time: 0,
+  blankCnt: 0,
 };
 export const initcustomData: customDataInterface = {
   row: 10,
@@ -54,3 +58,37 @@ export const dir = [
   [-1, 1],
   [-1, -1],
 ];
+
+export let MineSweeperData: string[][];
+
+export const createMineSweeperData: (
+  row: number,
+  col: number,
+  bombCnt: number
+) => void = (row, col, bombCnt) => {
+  const processBomb = (arr: Array<any>) => {
+    for (let i = 0; i < row; i++)
+      for (let j = 0; j < col; j++) {
+        if (arr[i][j] === "💣") continue;
+        let cnt = 0;
+        dir.forEach((value) => {
+          let ny = i + value[0],
+            nx = j + value[1];
+          if (0 <= ny && ny < row && 0 <= nx && nx < col)
+            if (arr[ny][nx] === "💣") cnt++;
+        });
+        arr[i][j] = cnt ? `${cnt}` : "0";
+      }
+  };
+  let temp = new Array<string>();
+  for (let i = 0; i < bombCnt; i++) temp.push("💣");
+  for (let i = 0; i < row * col - bombCnt; i++) temp.push("0");
+  for (let i = temp.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [temp[i], temp[j]] = [temp[j], temp[i]];
+  }
+  let ret = Array.from(Array<string>(row), () => new Array<string>(col));
+  temp.forEach((value, idx) => (ret[Math.floor(idx / row)][idx % row] = value));
+  processBomb(ret);
+  MineSweeperData = ret;
+};
