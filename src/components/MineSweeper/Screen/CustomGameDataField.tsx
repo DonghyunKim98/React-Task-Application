@@ -1,6 +1,7 @@
 import React from 'react';
+import { customDataInterface } from './../MineSweeperData';
 
-function CustomGameDataField({customData, onChangeListener}: {customData: any, onChangeListener: Function}) {
+function CustomGameDataField({customData, onChangeListener}: {customData: customDataInterface, onChangeListener: Function}) {
     return (
         <div id="custom_Game_Field">
             <div id="custom_Width">
@@ -8,10 +9,11 @@ function CustomGameDataField({customData, onChangeListener}: {customData: any, o
                 <input
                     type="number"
                     id="rowInput"
-                    onChange={(e)=>onChangeListener({
+                    onChange={(e)=>{
+                        onChangeListener({
                         ...customData,
-                        row: e.currentTarget.value,
-                    })}
+                        row: parseInt(e.currentTarget.value),
+                    })}}
                 />
             </div>
             <div id="custom_Height">
@@ -21,7 +23,7 @@ function CustomGameDataField({customData, onChangeListener}: {customData: any, o
                     id="heightInput"
                     onChange={(e)=>onChangeListener({
                         ...customData,
-                        col: e.currentTarget.value,
+                        col: parseInt(e.currentTarget.value),
                     })}
                 />
             </div>
@@ -32,7 +34,7 @@ function CustomGameDataField({customData, onChangeListener}: {customData: any, o
                     id="bombInput"
                     onChange={(e)=>onChangeListener({
                         ...customData,
-                        bombCnt: e.currentTarget.value,
+                        bombCnt: parseInt(e.currentTarget.value),
                     })}
                 />
             </div>

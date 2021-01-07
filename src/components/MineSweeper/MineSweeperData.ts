@@ -66,6 +66,7 @@ export const createMineSweeperData: (
   col: number,
   bombCnt: number
 ) => void = (row, col, bombCnt) => {
+  console.log(row,col,bombCnt);
   const processBomb = (arr: Array<any>) => {
     for (let i = 0; i < row; i++)
       for (let j = 0; j < col; j++) {
@@ -88,6 +89,7 @@ export const createMineSweeperData: (
     [temp[i], temp[j]] = [temp[j], temp[i]];
   }
   let ret = Array.from(Array<string>(row), () => new Array<string>(col));
+  console.log(ret);
   temp.forEach((value, idx) => (ret[Math.floor(idx / row)][idx % row] = value));
   processBomb(ret);
   MineSweeperData = ret;

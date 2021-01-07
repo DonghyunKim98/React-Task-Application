@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
-import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData, gameProcessDataInterface, gameDefaultDataInterface, initgameProcessData, initGameDefaultData, createMineSweeperData} from './MineSweeperData';
+import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData, gameProcessDataInterface, gameDefaultDataInterface, initgameProcessData, initGameDefaultData, createMineSweeperData, MineSweeperData} from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
 import GameInfo from './Screen/GameInfo';
@@ -54,17 +54,17 @@ function MineSweeper() {
     };
 
     const checkValidGame: () => boolean = () => {
-        if (gameDefaultData.selectLevel !== "사용자 설정") return true;
-        const isBombCntOver: number = gameDefaultData.row * gameDefaultData.col - gameDefaultData.bombCnt;
-        return isBombCntOver ? true : false;
+        const isBombCntOver: number = customData.row * customData.col - customData.bombCnt;
+        return isBombCntOver > 0 ? true : false;
     };
 
     const onStartBtnClickListener = () => {
-        if (!checkValidGame()) {
-            alert("너무 폭탄이 많아요!!");
-            return;
-        }
         if (gameDefaultData.selectLevel === "사용자 설정") {
+            if (!checkValidGame()) {
+                alert("너무 폭탄이 많아요!!");
+                return;
+            }
+            createMineSweeperData(customData.row,customData.col,customData.bombCnt);
             setGameDefaultData({
                 ...gameDefaultData,
                 row: customData.row,
@@ -74,6 +74,10 @@ function MineSweeper() {
             setGameData({
                 ...gameData,
                 flagCnt: customData.bombCnt,
+            });
+            setGameProcessData({
+                ...gameProcessData,
+                isGameStart: true,
             });
             return;
         }
