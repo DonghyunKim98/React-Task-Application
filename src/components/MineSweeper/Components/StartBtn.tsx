@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
 function StartBtn({onStartBtnClickListener}:{onStartBtnClickListener: Function}) {
-    return (
-        <button 
-        id="startBtn"
-        onClick={()=>onStartBtnClickListener()}
-        >
+	return (
+		<button
+			id="startBtn"
+			onClick={() => onStartBtnClickListener()}
+		>
             시작
-        </button>
-    );
+		</button>
+	);
 }
 
 export default StartBtn;

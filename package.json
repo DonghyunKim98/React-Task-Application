@@ -10,6 +10,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "eslint-config-naver": "^2.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -23,7 +24,9 @@
     "deploy": "gh-pages -d build",
     "predeploy": "npm run build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "tsc --noEmit && eslint src/**/*.ts",
+    "lint-fix": "tsc --noEmit && eslint --fix src/**/*.{ts,tsx}"
   },
   "eslintConfig": {
     "extends": [
@@ -45,7 +48,26 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
-    "gh-pages": "^3.1.0"
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.2.1"
   },
-  "homepage": "https://DonghyunKim98.github.io/React-Task-Application"
+  "homepage": "https://DonghyunKim98.github.io/React-Task-Application",
+  "description": "* React     * TypeScript     * Router     * Redux     * Contex     * Hook --- ## Task List * Todo List * MineSweeper",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonghyunKim98/React-Task-Application.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DonghyunKim98/React-Task-Application/issues"
+  }
 }
