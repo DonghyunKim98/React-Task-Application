@@ -1,5 +1,6 @@
 import React from 'react';
-import { gameDataInterface,gameDefaultDataInterface } from '../MineSweeperData';
+import { gameDataInterface, gameDefaultDataInterface } from '../static/hookStateData';
+
 
 function GameInfo({gameData, gameDefaultData}: {gameData: gameDataInterface, gameDefaultData: gameDefaultDataInterface}) {
     return (

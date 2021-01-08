@@ -1,5 +1,6 @@
 import React from 'react';
-import { height, width, MineSweeperData } from '../MineSweeperData';
+import {MineSweeperData } from '../static/MineSweeperData';
+import { height, width } from '../static/StaticData';
 interface GameProp {
   row: number,
   col: number,

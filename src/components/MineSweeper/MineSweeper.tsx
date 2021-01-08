@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import CustomGameDataField from './Screen/CustomGameDataField';
+import CustomGameDataField from './Components/CustomGameDataField';
 import "./MineSweeper.css";
-import { initGameData, gameDataInterface, customDataInterface, levels, dir, initCustomData, gameProcessDataInterface, gameDefaultDataInterface, initgameProcessData, initGameDefaultData, createMineSweeperData } from './MineSweeperData';
-import Selection from './Screen/Selection';
-import StartBtn from './Screen/StartBtn';
-import GameInfo from './Screen/GameInfo';
-import Game from './Screen/Game';
+import { createMineSweeperData } from './static/MineSweeperData';
+import Selection from './Components/Selection';
+import StartBtn from './Components/StartBtn';
+import GameInfo from './Components/GameInfo';
+import Game from './Components/Game';
+import { customDataInterface, gameDataInterface, gameDefaultDataInterface, gameProcessDataInterface, initCustomData, initGameData, initGameDefaultData, initgameProcessData } from './static/hookStateData';
+import { dir, levels } from './static/StaticData';
 
 function MineSweeper() {
     const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
