@@ -6,9 +6,9 @@ export const createMineSweeperData = (
 	col: number,
 	MineCnt: number,
 ) => {
-	const processMine = (arr: Array<any>) => {
-		for (let i = 0; i < row; i++) {
-			for (let j = 0; j < col; j++) {
+	const processMine = (arr: string[][]) => {
+		for (let i : number = 0; i < row; i++) {
+			for (let j : number = 0; j < col; j++) {
 				if (arr[i][j] === "💣") continue;
 				let cnt = 0;
 
@@ -18,7 +18,7 @@ export const createMineSweeperData = (
 
 					if (ny >= 0 && ny < row && nx >= 0 && nx < col) { if (arr[ny][nx] === "💣") cnt++; }
 				});
-				arr[i][j] = cnt ? `${cnt}` : "0";
+				arr[i][j] = cnt > 0 ? `${cnt}` : "0";
 			}
 		}
 	};
@@ -31,9 +31,8 @@ export const createMineSweeperData = (
 
 		[temp[i], temp[j]] = [temp[j], temp[i]];
 	}
-	const ret = Array.from(Array<string>(row), () => new Array<string>(col));
+	MineSweeperData = Array.from(Array<string>(row), () => new Array<string>(col));
 
-	temp.forEach((value, idx) => (ret[Math.floor(idx / row)][idx % row] = value));
-	processMine(ret);
-	MineSweeperData = ret;
+	temp.forEach((value, idx) => (MineSweeperData[Math.floor(idx / row)][idx % row] = value));
+	processMine(MineSweeperData);
 };

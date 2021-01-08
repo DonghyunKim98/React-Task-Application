@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from "react";
 import {MineSweeperData} from "../static/MineSweeperData";
 import {height, width} from "../static/StaticData";
@@ -12,14 +13,13 @@ interface GameProp {
 function Game({row, col, gridClickListener, gridRightClickListener}: GameProp) {
 	const tdWidth: number = width / col;
 	const tdHeight: number = height / row;
-	// eslint-disable-next-line no-undef
 	const TableItems: JSX.Element[] = [];
 
 	for (let ypos = 0; ypos < row; ypos++) {
-		const trItems = [];
+		const trItems : JSX.Element[] = [];
 
 		for (let xpos = 0; xpos < col; xpos++) {
-			const tdElement = <td
+			const tdElement : JSX.Element = <td
 				height={`${tdHeight}`}
 				width={`${tdWidth}`}
 				id={`${ypos}_${xpos}`}
@@ -41,7 +41,7 @@ function Game({row, col, gridClickListener, gridRightClickListener}: GameProp) {
 	return (
 		<table>
 			<tbody>
-				{TableItems}
+			{TableItems}
 			</tbody>
 		</table>
 	);

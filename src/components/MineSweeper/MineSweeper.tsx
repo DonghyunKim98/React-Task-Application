@@ -9,6 +9,7 @@ import Game from "./Components/Game";
 import {customDataInterface, gameDataInterface, gameDefaultDataInterface, gameProcessDataInterface, initCustomData, initGameData, initGameDefaultData, initgameProcessData} from "./static/HookStateData";
 import {dir, levels} from "./static/StaticData";
 
+
 function MineSweeper() {
 	const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
 	const [gameDefaultData, setGameDefaultData]: [gameDefaultDataInterface, Function] = useState(initGameDefaultData);
@@ -113,26 +114,30 @@ function MineSweeper() {
 		});
 	};
 
-	const gridRightClickListener = (e: any) => {
+	const gridRightClickListener = (e: Event) => {
+		if (e.currentTarget === null) return;
 		e.preventDefault();
-		if (gameData.flagCnt <= 0 || e.currentTarget.innerText === "🚩" || e.currentTarget.style.backgroundColor === "white") return;
-		e.currentTarget.innerText = `🚩`;
+		const target = e.currentTarget as HTMLElement;
+
+		if (gameData.flagCnt <= 0 || target.innerText === "🚩" || target.style.backgroundColor === "white") return;
+		target.innerText = `🚩`;
 		setGameData({
 			...gameData,
 			flagCnt: gameData.flagCnt - 1,
 		});
 	};
 
-	const gridClickListener = (currentTarget: any) => {
+	const gridClickListener = (currentTarget: HTMLElement) => {
 		const isClicked: boolean = currentTarget.style.backgroundColor === "white";
 		const isRightClicked: boolean = currentTarget.innerText === "🚩";
 
 		if (isClicked || isRightClicked) return 0;
 		currentTarget.style.backgroundColor = "white";
-		const textNode = currentTarget.childNodes[0];
+		const textNodeElement = currentTarget.childNodes[0] as Element;
+		const textNodeHTMLElement = currentTarget.childNodes[0] as HTMLElement;
 
-		textNode.innerText = textNode.getAttribute("custom-value");
-		if (textNode.innerText === "💣") {
+		textNodeHTMLElement.innerText = textNodeElement.getAttribute("custom-value")!;
+		if (textNodeHTMLElement.innerText === "💣") {
 			setGameProcessData({
 				...gameProcessData,
 				isGameOver: true,
@@ -141,21 +146,21 @@ function MineSweeper() {
 		}
 		const clickedCnt: number = 1;
 
-		if (textNode.innerText === "0") {
-			textNode.innerText = "";
+		if (textNodeHTMLElement.innerText === "0") {
+			textNodeHTMLElement.innerText = "";
 			setTimeout(() => {
-				const idName = currentTarget.id.split("_");
-				const ypos = parseInt(idName[0], 10);
-				const xpos = parseInt(idName[1], 10);
+				const idName : Array<string> = currentTarget.id.split("_");
+				const ypos : number = parseInt(idName[0], 10);
+				const xpos : number = parseInt(idName[1], 10);
 
 				dir.forEach(value => {
 					const ny = value[0] + ypos;
 					const nx = value[1] + xpos;
 
 					if (ny >= 0 && ny < gameDefaultData.row && nx >= 0 && nx < gameDefaultData.col) {
-						const nextNode = document.getElementById(`${ny}_${nx}`);
+						const nextNode : HTMLElement = document.getElementById(`${ny}_${nx}`)!;
 
-						if (nextNode != null && nextNode.innerText !== "🚩") {
+						if (nextNode.innerText !== "🚩") {
 							const nextTextNode = nextNode.childNodes[0] as Element;
 
 							if (nextTextNode.getAttribute("custom-value") !== "💣") {

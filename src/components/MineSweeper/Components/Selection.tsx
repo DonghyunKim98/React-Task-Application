@@ -7,7 +7,8 @@ interface SelectionProp {
 }
 
 function Selection({currentLevel, onLevelChangeListener}: SelectionProp) {
-	const levelItemComponents = [];
+	// eslint-disable-next-line no-undef
+	const levelItemComponents : JSX.Element[] = [];
 
 	for (const level in levels) {
 		levelItemComponents.push(

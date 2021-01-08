@@ -1,6 +1,5 @@
 import React from "react";
-import {customDataInterface} from "../static/HookStateData";
-
+import {customDataInterface} from "../static/hookStateData";
 
 function CustomGameDataField({customData, onChangeListener}: {customData: customDataInterface, onChangeListener: Function}) {
 	return (
