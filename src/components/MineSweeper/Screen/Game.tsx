@@ -20,7 +20,7 @@ function Game({ row, col, gridClickListener, gridRightClickListener }: GameProp)
         id={`${ypos}_${xpos}`}
         key={`${ypos}_${xpos}`}
         onContextMenu={(e) => gridRightClickListener(e)}
-        onClick={(e) => gridClickListener(e.currentTarget)}
+        onClick={(e) => gridClickListener(e.currentTarget, 1)}
       >
         <span custom-value={`${MineSweeperData[ypos][xpos]}`} />
       </td>;

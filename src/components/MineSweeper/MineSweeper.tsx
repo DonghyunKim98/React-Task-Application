@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomGameDataField from './Screen/CustomGameDataField';
 import "./MineSweeper.css";
-import { initGameData, gameDataInterface, customDataInterface, levels, dir, initcustomData, gameProcessDataInterface, gameDefaultDataInterface, initgameProcessData, initGameDefaultData, createMineSweeperData, MineSweeperData} from './MineSweeperData';
+import { initGameData, gameDataInterface, customDataInterface, levels, dir, initCustomData, gameProcessDataInterface, gameDefaultDataInterface, initgameProcessData, initGameDefaultData, createMineSweeperData } from './MineSweeperData';
 import Selection from './Screen/Selection';
 import StartBtn from './Screen/StartBtn';
 import GameInfo from './Screen/GameInfo';
@@ -10,10 +10,24 @@ import Game from './Screen/Game';
 function MineSweeper() {
     const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
     const [gameDefaultData, setGameDefaultData]: [gameDefaultDataInterface, Function] = useState(initGameDefaultData)
-    const [customData, setCustomData]: [customDataInterface, Function] = useState(initcustomData);
+    const [customData, setCustomData]: [customDataInterface, Function] = useState(initCustomData);
     const [gameProcessData, setGameProcessData]: [gameProcessDataInterface, Function] = useState(initgameProcessData);
-    // 시간 경과를 체크하기 위한 useEffect
+    // 시간 경과 및 게임 성공을 체크하기 위한 useEffect
     useEffect(() => {
+        const checkGameSuccess: () => boolean = () => {
+            const gridCnt: number = gameDefaultData.row * gameDefaultData.col;
+            const isMineFinedAll: boolean = gridCnt - gameData.blankCnt === gameDefaultData.MineCnt;
+            return isMineFinedAll;
+        }
+
+        if (checkGameSuccess() && !gameProcessData.isPlayerWinGame) {
+            setGameProcessData({
+                ...gameProcessData,
+                isGameOver: true,
+                isPlayerWinGame: true,
+            })
+            return;
+        }
         if (gameProcessData.isGameOver) {
             if (gameProcessData.isPlayerWinGame) {
                 alert("모든 폭탄을 찾아냈다! 최고야!");
@@ -21,10 +35,14 @@ function MineSweeper() {
                 alert("저런 폭탄을 밟아버렸네 ㅠㅠ");
             }
             setGameProcessData({
-                ...gameProcessData,
-                isGameOver: false,
-                isGameStart: false,
+                ...initgameProcessData,
             });
+            setGameData({
+                ...initGameData,
+            })
+            setCustomData({
+                ...initCustomData,
+            })
             return;
         }
         if (gameProcessData.isGameStart) {
@@ -37,43 +55,45 @@ function MineSweeper() {
             return () => clearInterval(tick);
         }
         return;
-    }, [gameProcessData, gameData]);
+    }, [gameProcessData, gameData, gameDefaultData]);
+
+
     const onLevelChangeListener = (newLevel: string) => {
-        const [newRow, newCol, newBombAndFlagCnt]: Array<number> = levels[`${newLevel}`];
+        const [newRow, newCol, newMineAndFlagCnt]: Array<number> = levels[`${newLevel}`];
 
         setGameDefaultData({
             selectLevel: `${newLevel}`,
             row: newRow,
             col: newCol,
-            bombCnt: newBombAndFlagCnt,
+            MineCnt: newMineAndFlagCnt,
         });
         setGameData({
             ...gameData,
-            flagCnt: newBombAndFlagCnt,
+            flagCnt: newMineAndFlagCnt,
         })
     };
 
     const checkValidGame: () => boolean = () => {
-        const isBombCntOver: number = customData.row * customData.col - customData.bombCnt;
-        return isBombCntOver > 0 ? true : false;
+        const isMineCntOver: number = customData.row * customData.col - customData.MineCnt;
+        return isMineCntOver > 0 ? true : false;
     };
 
     const onStartBtnClickListener = () => {
         if (gameDefaultData.selectLevel === "사용자 설정") {
             if (!checkValidGame()) {
-                alert("너무 폭탄이 많아요!!");
+                alert("너무 지뢰가 많아요!!");
                 return;
             }
-            createMineSweeperData(customData.row,customData.col,customData.bombCnt);
+            createMineSweeperData(customData.row, customData.col, customData.MineCnt);
             setGameDefaultData({
                 ...gameDefaultData,
                 row: customData.row,
                 col: customData.col,
-                bombCnt: customData.bombCnt,
+                MineCnt: customData.MineCnt,
             });
             setGameData({
                 ...gameData,
-                flagCnt: customData.bombCnt,
+                flagCnt: customData.MineCnt,
             });
             setGameProcessData({
                 ...gameProcessData,
@@ -81,16 +101,16 @@ function MineSweeper() {
             });
             return;
         }
-        createMineSweeperData(gameDefaultData.row,gameDefaultData.col,gameDefaultData.bombCnt);
+        createMineSweeperData(gameDefaultData.row, gameDefaultData.col, gameDefaultData.MineCnt);
         setGameProcessData({
             ...gameProcessData,
             isGameStart: true,
         });
     };
 
-    const gridRightClickListener = (e : any) => {
+    const gridRightClickListener = (e: any) => {
         e.preventDefault();
-        if (gameData.flagCnt <= 0 || e.currentTarget.innerText === '🚩') return;
+        if (gameData.flagCnt <= 0 || e.currentTarget.innerText === '🚩' || e.currentTarget.style.backgroundColor === "white") return;
         e.currentTarget.innerText = `🚩`;
         setGameData({
             ...gameData,
@@ -102,14 +122,9 @@ function MineSweeper() {
         const isClicked: boolean = currentTarget.style.backgroundColor === "white";
         const isRightClicked: boolean = currentTarget.innerText === '🚩';
 
-        if (isClicked || isRightClicked) return;
+        if (isClicked || isRightClicked) return 0;
         currentTarget.style.backgroundColor = "white";
         const textNode = currentTarget.childNodes[0];
-
-        setGameData({
-            ...gameData,
-            blankCnt: gameData.blankCnt + 1,
-        });
         textNode.innerText = textNode.getAttribute('custom-value');
         if (textNode.innerText === "💣") {
             setGameProcessData({
@@ -118,31 +133,38 @@ function MineSweeper() {
             })
             return;
         }
+        let clickedCnt: number = 1;
         if (textNode.innerText === "0") {
             textNode.innerText = '';
-            const idName = currentTarget.id.split("_");
-            const ypos = parseInt(idName[0]);
-            const xpos = parseInt(idName[1]);
+            setTimeout(() => {
+                const idName = currentTarget.id.split("_");
+                const ypos = parseInt(idName[0]);
+                const xpos = parseInt(idName[1]);
 
-            dir.forEach((value) => {
-                const ny = value[0] + ypos,
-                    nx = value[1] + xpos;
+                dir.forEach((value) => {
+                    const ny = value[0] + ypos,
+                        nx = value[1] + xpos;
 
-                if (0 <= ny && ny < gameDefaultData.row && 0 <= nx && nx < gameDefaultData.col) {
-                    const nextNode = document.getElementById(`${ny}_${nx}`);
+                    if (0 <= ny && ny < gameDefaultData.row && 0 <= nx && nx < gameDefaultData.col) {
+                        const nextNode = document.getElementById(`${ny}_${nx}`);
 
-                    if (nextNode != null && nextNode.innerText !== '🚩') {
-                        const nextTextNode = nextNode.childNodes[0] as Element;
+                        if (nextNode != null && nextNode.innerText !== '🚩') {
+                            const nextTextNode = nextNode.childNodes[0] as Element;
 
-                        if (nextTextNode.getAttribute('custom-value') !== "💣") {
-                            gridClickListener(nextNode);
+                            if (nextTextNode.getAttribute('custom-value') !== "💣") {
+                                gridClickListener(nextNode);
+                            }
                         }
                     }
-                }
-            })
+                })
+            }, 10);
         }
+        setGameData({
+            ...gameData,
+            blankCnt: gameData.blankCnt + clickedCnt,
+        });
         return;
-    };
+    }
 
     return (
         <div>
@@ -155,7 +177,7 @@ function MineSweeper() {
                     onLevelChangeListener={onLevelChangeListener}
                 />
                 {
-                    (gameDefaultData.selectLevel === "사용자 설정") &&
+                    (gameDefaultData.selectLevel === "사용자 설정" && gameProcessData.isGameStart !== true) &&
                     <CustomGameDataField
                         customData={customData}
                         onChangeListener={setCustomData}
@@ -186,5 +208,6 @@ function MineSweeper() {
         </div>
     )
 }
+
 
 export default MineSweeper;

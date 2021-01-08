@@ -7,8 +7,8 @@ function GameInfo({gameData, gameDefaultData}: {gameData: gameDataInterface, gam
             <div id="flag_data">
                 {`🚩 ${gameData.flagCnt}`}
             </div>
-            <div id="bomb_data">
-                {`💣 ${gameDefaultData.bombCnt}`}
+            <div id="Mine_data">
+                {`💣 ${gameDefaultData.MineCnt}`}
             </div>
             <div id="time_data">
                 {`시간 ${gameData.time}`}

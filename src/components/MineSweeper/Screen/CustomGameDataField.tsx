@@ -27,14 +27,14 @@ function CustomGameDataField({customData, onChangeListener}: {customData: custom
                     })}
                 />
             </div>
-            <div id="custom_Bomb">
+            <div id="custom_Mine">
                 <span className="custom_Game_Field_Title">폭탄</span>   
                 <input
                     type="number"
-                    id="bombInput"
+                    id="MineInput"
                     onChange={(e)=>onChangeListener({
                         ...customData,
-                        bombCnt: parseInt(e.currentTarget.value),
+                        MineCnt: parseInt(e.currentTarget.value),
                     })}
                 />
             </div>
