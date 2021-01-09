@@ -9,14 +9,28 @@ import Game from "./Components/Game";
 import {customDataInterface, gameDataInterface, gameDefaultDataInterface, gameProcessDataInterface, initCustomData, initGameData, initGameDefaultData, initgameProcessData} from "./static/HookStateData";
 import {dir, levels} from "./static/StaticData";
 
-
 function MineSweeper() {
 	const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
 	const [gameDefaultData, setGameDefaultData]: [gameDefaultDataInterface, Function] = useState(initGameDefaultData);
 	const [customData, setCustomData]: [customDataInterface, Function] = useState(initCustomData);
 	const [gameProcessData, setGameProcessData]: [gameProcessDataInterface, Function] = useState(initgameProcessData);
 
-	// 시간 경과 및 게임 성공을 체크하기 위한 useEffect
+	// 시간 경과 체크를 위한 useEffect
+	useEffect(() => {
+		if (gameProcessData.isGameStart) {
+			const tick = setInterval(() => {
+				setGameData({
+					...gameData,
+					time: gameData.time + 1,
+				});
+			}, 1000);
+
+			// eslint-disable-next-line consistent-return
+			return () => clearInterval(tick);
+		}
+		return undefined;
+	}, [gameData, gameProcessData]);
+	// 게임 성공을 체크하기 위한 useEffect
 	useEffect(() => {
 		const checkGameSuccess: () => boolean = () => {
 			const gridCnt: number = gameDefaultData.row * gameDefaultData.col;
@@ -31,8 +45,10 @@ function MineSweeper() {
 				isGameOver: true,
 				isPlayerWinGame: true,
 			});
-			return;
 		}
+	}, [gameProcessData, gameData, gameDefaultData]);
+	// 게임이 끝난 이후 alert를 위한 useEffect
+	useEffect(() => {
 		if (gameProcessData.isGameOver) {
 			if (gameProcessData.isPlayerWinGame) {
 				alert("모든 폭탄을 찾아냈다! 최고야!");
@@ -48,20 +64,8 @@ function MineSweeper() {
 			setCustomData({
 				...initCustomData,
 			});
-			return;
-		}
-		if (gameProcessData.isGameStart) {
-			const tick = setInterval(() => {
-				setGameData({
-					...gameData,
-					time: gameData.time + 1,
-				});
-			}, 1000);
-
-			clearInterval(tick);
 		}
 	}, [gameProcessData, gameData, gameDefaultData]);
-
 
 	const onLevelChangeListener = (newLevel: string) => {
 		const [newRow, newCol, newMineAndFlagCnt]: Array<number> = levels[`${newLevel}`];

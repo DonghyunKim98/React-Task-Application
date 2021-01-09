@@ -41,7 +41,7 @@ function Game({row, col, gridClickListener, gridRightClickListener}: GameProp) {
 	return (
 		<table>
 			<tbody>
-			{TableItems}
+				{TableItems}
 			</tbody>
 		</table>
 	);
