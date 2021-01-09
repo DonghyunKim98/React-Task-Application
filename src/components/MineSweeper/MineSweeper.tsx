@@ -11,25 +11,21 @@ import {dir, levels} from "./static/StaticData";
 
 function MineSweeper() {
 	const [gameData, setGameData]: [gameDataInterface, Function] = useState(initGameData);
+	const [time, setTime] : [number, Function] = useState(0);
 	const [gameDefaultData, setGameDefaultData]: [gameDefaultDataInterface, Function] = useState(initGameDefaultData);
 	const [customData, setCustomData]: [customDataInterface, Function] = useState(initCustomData);
 	const [gameProcessData, setGameProcessData]: [gameProcessDataInterface, Function] = useState(initgameProcessData);
 
 	// 시간 경과 체크를 위한 useEffect
 	useEffect(() => {
-		if (gameProcessData.isGameStart) {
-			const tick = setInterval(() => {
-				setGameData({
-					...gameData,
-					time: gameData.time + 1,
-				});
-			}, 1000);
+		if (!gameProcessData.isGameStart) return undefined;
+		const tick = setTimeout(() => {
+			setTime(time + 1);
+		}, 1000);
 
-			// eslint-disable-next-line consistent-return
-			return () => clearInterval(tick);
-		}
-		return undefined;
-	}, [gameData, gameProcessData]);
+		// eslint-disable-next-line consistent-return
+		return () => clearTimeout(tick);
+	}, [time, gameProcessData]);
 	// 게임 성공을 체크하기 위한 useEffect
 	useEffect(() => {
 		const checkGameSuccess: () => boolean = () => {
@@ -49,6 +45,7 @@ function MineSweeper() {
 	}, [gameProcessData, gameData, gameDefaultData]);
 	// 게임이 끝난 이후 alert를 위한 useEffect
 	useEffect(() => {
+		if (!gameProcessData.isGameOver) return;
 		if (gameProcessData.isGameOver) {
 			if (gameProcessData.isPlayerWinGame) {
 				alert("모든 폭탄을 찾아냈다! 최고야!");
@@ -64,8 +61,9 @@ function MineSweeper() {
 			setCustomData({
 				...initCustomData,
 			});
+			setTime(0);
 		}
-	}, [gameProcessData, gameData, gameDefaultData]);
+	}, [gameProcessData, gameData, gameDefaultData, time]);
 
 	const onLevelChangeListener = (newLevel: string) => {
 		const [newRow, newCol, newMineAndFlagCnt]: Array<number> = levels[`${newLevel}`];
@@ -204,6 +202,7 @@ function MineSweeper() {
                     <GameInfo
                     	gameData={gameData}
                     	gameDefaultData={gameDefaultData}
+                    	time={time}
                     />
 				}
 				<StartBtn

@@ -2,7 +2,7 @@ import React from "react";
 import {gameDataInterface, gameDefaultDataInterface} from "../static/HookStateData";
 
 
-function GameInfo({gameData, gameDefaultData}: {gameData: gameDataInterface, gameDefaultData: gameDefaultDataInterface}) {
+function GameInfo({gameData, gameDefaultData, time}: {gameData: gameDataInterface, gameDefaultData: gameDefaultDataInterface, time: number}) {
 	return (
 		<div id="game_info">
 			<div id="flag_data">
@@ -12,7 +12,7 @@ function GameInfo({gameData, gameDefaultData}: {gameData: gameDataInterface, gam
 				{`💣 ${gameDefaultData.MineCnt}`}
 			</div>
 			<div id="time_data">
-				{`시간 ${gameData.time}`}
+				{`시간 ${time}`}
 			</div>
 		</div>
 	);

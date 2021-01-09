@@ -6,7 +6,6 @@ export interface gameDefaultDataInterface {
 }
 export interface gameDataInterface {
   flagCnt: number;
-  time: number;
   blankCnt: number;
 }
 export interface customDataInterface {
@@ -27,7 +26,6 @@ export const initGameDefaultData: gameDefaultDataInterface = {
 };
 export const initGameData: gameDataInterface = {
 	flagCnt: 10,
-	time: 0,
 	blankCnt: 0,
 };
 export const initCustomData: customDataInterface = {
