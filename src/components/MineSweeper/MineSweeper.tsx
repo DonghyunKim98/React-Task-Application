@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import CustomGameDataField from "./Components/CustomGameDataField";
+import CustomGameDataField from "./Screens/CustomGameDataField";
 import "./MineSweeper.css";
 import {createMineSweeperData} from "./static/MineSweeperData";
-import Selection from "./Components/Selection";
-import StartBtn from "./Components/StartBtn";
-import GameInfo from "./Components/GameInfo";
-import Game from "./Components/Game";
+import Selection from "./Screens/Selection";
+import StartBtn from "./Screens/StartBtn";
+import GameInfo from "./Screens/GameInfo";
+import Game from "./Screens/Game";
 import {customDataInterface, gameDataInterface, gameDefaultDataInterface, gameProcessDataInterface, initCustomData, initGameData, initGameDefaultData, initgameProcessData} from "./static/HookStateData";
 import {dir, levels} from "./static/StaticData";
 
@@ -66,7 +66,7 @@ function MineSweeper() {
 	}, [gameProcessData, gameData, gameDefaultData, time]);
 
 	const onLevelChangeListener = (newLevel: string) => {
-		const [newRow, newCol, newMineAndFlagCnt]: Array<number> = levels[`${newLevel}`];
+		const [newRow, newCol, newMineAndFlagCnt]: Array<number> = levels[newLevel];
 
 		setGameDefaultData({
 			selectLevel: `${newLevel}`,

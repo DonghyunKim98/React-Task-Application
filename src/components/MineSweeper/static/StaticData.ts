@@ -1,4 +1,4 @@
-export const levels: { [index: string]: Array<number> } = {
+export const levels: { [key: string]: Array<number> } = {
 	초급: [10, 10, 10],
 	중급: [15, 15, 20],
 	고급: [20, 20, 40],
